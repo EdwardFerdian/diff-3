@@ -16,12 +16,17 @@ A conda environment can be created and activated with
   
     ...
 
+Install **diff3** as a package. Go to the directory where the setup.py is located and type
+    `pip install -e .`
+
+
 ### Training
 
 #### Prepare training data
-Prepare the data by resizing it to 160x160x128. Images are normalized.
+Prepare the data by resizing it to 160x160x128. Images are normalized and saved to .npy files by default.
   
-    ...
+    >> python preprocess.py [-h] --data-dir DATA_DIR --label-dir LABEL_DIR [--image-size IMAGE_SIZE [IMAGE_SIZE ...]] --output-dir OUTPUT_DIR [--data-subset DATA_SUBSET]
+                     [--format FORMAT]
 
 #### Train VAE
 Train VAE for 200 epochs with KL_weight adjusted from 1e-6 to 1 after 100 epochs
