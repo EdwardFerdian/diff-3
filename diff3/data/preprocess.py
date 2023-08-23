@@ -14,7 +14,7 @@ class Preprocessor():
         label_dir,
         image_size,
         output_dir,
-        data_subset,
+        subset,
         format = "npy",
         ext = 'nii.gz'
     ):
@@ -24,7 +24,7 @@ class Preprocessor():
         self.image_size = image_size
         self.new_shape=image_size
         self.output_dir = output_dir
-        self.data_subset = data_subset
+        self.data_subset = subset
         assert format in ["npy", "h5"]
         self.format = format
         
@@ -78,9 +78,6 @@ class Preprocessor():
         img = self._resize(img, r, pads, 3)
         mask = self._resize(mask, r, pads, 0)
 
-        img = np.expand_dims(img, axis=0)
-        mask = np.expand_dims(mask, axis=0)
-
         # normalize
         img = img / 255.
 
@@ -88,6 +85,9 @@ class Preprocessor():
 
         if self.format == "h5":
             output_filepath = f"{self.output_dir}/mitea.h5"
+
+            img = np.expand_dims(img, axis=0)
+            mask = np.expand_dims(mask, axis=0)
 
             h5util.save(output_filepath, f"{self.data_subset}/images", img)
             h5util.save(output_filepath, f"{self.data_subset}/labels", mask)
@@ -111,7 +111,7 @@ if __name__ == "__main__":
     parser.add_argument("--label-dir", type=str, required=True)
     parser.add_argument("--image-size", type=int, nargs="+", default=[160, 160, 128])
     parser.add_argument("--output-dir", type=str, required=True)
-    parser.add_argument("--data-subset", type=str, default="train")
+    parser.add_argument("--subset", type=str, required=True)
     parser.add_argument("--format", type=str, default="npy")
     args = parser.parse_args()
 
@@ -119,10 +119,10 @@ if __name__ == "__main__":
     label_dir = args.label_dir
     image_size = args.image_size
     output_dir = args.output_dir
-    data_subset = args.data_subset
+    subset = args.subset
     format = args.format
 
-    prepro = Preprocessor(data_dir, label_dir, image_size, output_dir, data_subset, format)
+    prepro = Preprocessor(data_dir, label_dir, image_size, output_dir, subset, format)
 
     for i in range(len(prepro.filenames)):
         print(f"Processing image {i+1}/{len(prepro.filenames)}", end="\r")

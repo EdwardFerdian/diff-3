@@ -127,3 +127,8 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+src/taming-transformers/
+diff3/autoencoder/lightning_logs/
+
+diff3/autoencoder/taming/modules/autoencoder/lpips/vgg.pth
