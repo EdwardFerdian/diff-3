@@ -28,7 +28,7 @@ Install **diff3** as a package. Go to the directory where the setup.py is locate
 #### Prepare training data
 Prepare the data by resizing it to 160x160x128. Images are normalized and saved to .npy files by default.
   
-    >> python preprocess.py [-h] --data-dir DATA_DIR --label-dir LABEL_DIR [--image-size IMAGE_SIZE [IMAGE_SIZE ...]] --output-dir OUTPUT_DIR [--subset DATA_SUBSET]
+    >> python prepare_data.py [-h] --data-dir DATA_DIR --label-dir LABEL_DIR [--image-size IMAGE_SIZE [IMAGE_SIZE ...]] --output-dir OUTPUT_DIR [--subset DATA_SUBSET]
                      [--format FORMAT]
 
 #### Train VAE
