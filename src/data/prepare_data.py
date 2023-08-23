@@ -1,8 +1,8 @@
 import argparse
 import os
 import numpy as np
-from  diff3.util.mhd_util import read_mhd
-import diff3.util.h5_util as h5util
+from  util.mhd_util import read_mhd
+import util.h5_util as h5util
 from scipy.ndimage import zoom
 
 

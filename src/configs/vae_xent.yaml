@@ -28,7 +28,7 @@ ddconfig:
   dropout: 0.0
 
 lossconfig:
-  target: "diff3.autoencoder.losses.lpips.LPIPSWithDiscriminator"
+  target: "losses.lpips.LPIPSWithDiscriminator"
   params:
     perceptual_weight: 1
     kl_weight: 0.000001 # 1e-6

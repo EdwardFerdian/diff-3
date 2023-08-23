@@ -7,7 +7,7 @@ from torch.utils.data import DataLoader
 import importlib
 from multiprocessing import cpu_count
 
-import diff3.util.h5_util as h5util
+import util.h5_util as h5util
 import torch
 import torch.nn as nn
 import numpy as np
