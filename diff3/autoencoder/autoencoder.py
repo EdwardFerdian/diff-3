@@ -566,7 +566,7 @@ class AutoencoderKL(pl.LightningModule):
         
         # pick first case to check mean std
         znp = z[0].cpu().numpy()
-        print(f"\n{znp.shape} {np.mean(znp) = } {np.std(znp) = } [{np.min(znp):.3f}, {np.max(znp):.3f}]\n")
+        print(f"\n\n{znp.shape} {np.mean(znp) = } {np.std(znp) = } [{np.min(znp):.3f}, {np.max(znp):.3f}]\n")
 
         if self.trainer.log_dir is not None:
             save_dir = Path(self.trainer.log_dir) / 'recon'
