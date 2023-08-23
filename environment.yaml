@@ -27,5 +27,4 @@ dependencies:
     - SimpleITK==2.2.1
     - h5py==3.9.0
     - -e git+https://github.com/CompVis/taming-transformers.git@master#egg=taming-transformers
-    - -e .
     

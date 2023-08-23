@@ -129,6 +129,5 @@ dmypy.json
 .pyre/
 
 src/taming-transformers/
-diff3/autoencoder/lightning_logs/
-
-diff3/autoencoder/taming/modules/autoencoder/lpips/vgg.pth
+src/autoencoder/lightning_logs/
+src/autoencoder/taming/modules/autoencoder/lpips/vgg.pth

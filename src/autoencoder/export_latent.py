@@ -7,7 +7,7 @@ from autoencoder import AutoencoderKL
 from dataset3d_npy import Dataset3D_NPY
 from torch.utils.data import DataLoader
 import numpy as np
-import diff3.util.h5_util as h5util
+import util.h5_util as h5util
 import argparse
 
 if __name__ == "__main__":

@@ -2,8 +2,8 @@ import argparse
 import yaml
 import torch
 from autoencoder import AutoencoderKL
-import diff3.autoencoder.CustomModelCheckpoint as cmc
-from diff3.autoencoder.dataset3d_npy import Dataset3D_NPY
+import CustomModelCheckpoint as cmc
+from dataset3d_npy import Dataset3D_NPY
 from pytorch_lightning.callbacks import ModelCheckpoint
 from pytorch_lightning import Trainer
 
