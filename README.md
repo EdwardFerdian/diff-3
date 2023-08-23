@@ -23,7 +23,7 @@ Install **diff3** as a package. Go to the directory where the setup.py is locate
     `pip install -e .`
 
 
-### Training
+### 1. VAE Training
 
 #### Prepare training data
 Prepare the data by resizing it to 160x160x128. Images are normalized and saved to .npy files by default.
@@ -40,13 +40,23 @@ Configure the training parameters in the config file, e.g. `./configs/vae_xent.y
 
 
 
-#### Train DDPM
-Train DDPM for 50000 iterations
+### 2. LDM (DDPM) training
+
+#### Prepare training data
+Prepare the data by exporting the latent space of the training data using the VAE model that was just trained. Output will be saved in H5 file format.
+  
+    >> export_latent.py [-h] --ver VER [--subset SUBSET] [--logs-dir LOGS_DIR]
+
+
+H5 file contains minimum and maximum values of the latent space, which will be used to normalize the latent space during training. Mean and std of the latent space is saved in separate columns to be used for the sampling process during LDM training.
+  
+#### Train LDM
+Train LDM for 50000 iterations
         
         ...
 
 
-### Inference
+### 3. Inference
 
         ...
 
