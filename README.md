@@ -1,5 +1,7 @@
 # DIFF-3
-**3D echo** synthetic data generation with **paired labels**. 
+
+
+DIFF-3 *(read: DIFF-E)* is a **3D echo** synthetic data generation with **paired labels**. 
 This is a PyTorch implementation of the paper submitted to SASHIMI workshop, MICCAI 2023.
 
 ## Sample data
