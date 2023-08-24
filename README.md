@@ -67,6 +67,11 @@ Generate latent samples from the trained LDM model. The latent samples will be s
 
     >> python ldm/generate_samples.py --model-dir MODEL_DIR --ver VER --model-id MODEL_ID [--n-data N_DATA]
 
+Generate synthetic images+labels by decoding the latent samples
+
+    >> python autoencoder/gen_synthetic.py --model-dir MODEL_DIR --input INPUT --iter ITER [--n-data N_DATA] --output-dir OUTPUT_DIR
+
+
 
 
 
