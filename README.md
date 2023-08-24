@@ -30,7 +30,7 @@ Install **diff3** as a package. Go to the directory where the setup.py is locate
 #### Prepare training data
 Prepare the data by resizing it to 160x160x128. Images are normalized and saved to .npy files by default.
   
-    >> python prepare_data.py [-h] --data-dir DATA_DIR --label-dir LABEL_DIR [--image-size IMAGE_SIZE [IMAGE_SIZE ...]] --output-dir OUTPUT_DIR [--subset DATA_SUBSET]
+    >> python prepare_data.py --data-dir DATA_DIR --label-dir LABEL_DIR [--image-size IMAGE_SIZE [IMAGE_SIZE ...]] --output-dir OUTPUT_DIR [--subset DATA_SUBSET]
                      [--format FORMAT]
 
 #### Train VAE
@@ -47,15 +47,17 @@ Configure the training parameters in the config file, e.g. `./configs/vae_xent.y
 #### Prepare training data
 Prepare the data by exporting the latent space of the training data using the VAE model that was just trained. Output will be saved in H5 file format.
   
-    >> export_latent.py [-h] --ver VER [--subset SUBSET] [--logs-dir LOGS_DIR]
+    >> python autoencoder/export_latent.py --ver VER [--subset SUBSET] [--logs-dir LOGS_DIR]
 
 
 H5 file contains minimum and maximum values of the latent space, which will be used to normalize the latent space during training. Mean and std of the latent space is saved in separate columns to be used for the sampling process during LDM training.
   
 #### Train LDM
-Train LDM for 50000 iterations
+Copy the latent space training set to another directory if you wish, this will be used as the INPUT data. Fill in VER number to keep track of the expriment.
+
+By default DIFF-3 will be trained for 50000 iterations
         
-        ...
+    >> python trainer_ldm_3d.py --ver VER --input INPUT --output-dir OUTPUT_DIR [--batch-size BATCH_SIZE]
 
 
 ### 3. Inference
