@@ -40,6 +40,14 @@ Configure the training parameters in the config file, e.g. `./configs/vae_xent.y
         
     >> python autoencoder/trainer_autoencoderKL.py --config ./configs/vae_xent.yaml
 
+##### Examples
+For the first 100 epochs use:
+
+    >> python trainer_autoencoderKL.py --config ./configs/vae_100.yaml
+
+After the training, edit the `vae_200.yaml` and change the ckpt_path to the latest checkpoint, then run:
+
+    >> python trainer_autoencoderKL.py --config ./configs/vae_200.yaml
 
 
 ### 2. LDM (DDPM) training
@@ -75,7 +83,7 @@ Generate synthetic images+labels by decoding the latent samples
 
 
 
-### 4. Examples
+#### Examples
 Generate samples  using LDM and save samples to output directory. By default will be saved as `_samples[version].h5` in the output directory.
 
 Load the _samples[version].h5 file as input and decode them using VAE model By default will be saved as `_synthetic_samples[version].h5` in the output directory.
