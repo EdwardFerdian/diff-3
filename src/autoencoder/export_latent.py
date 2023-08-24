@@ -13,21 +13,31 @@ import argparse
 if __name__ == "__main__":
     # args
     parser = argparse.ArgumentParser(description='Test a VAE')
-    parser.add_argument('--ver', type=str, required=True, help='Version nr of the model to test')
     parser.add_argument('--subset', type=str, default="train", help='train/val')
-    parser.add_argument('--logs-dir', type=str, help='Path to lightning logs dir', default="./lightning_logs")
+    parser.add_argument('--model-dir', type=str, help='Path to the models dir', required=True)
+    parser.add_argument('--output-dir', type=str, help='Path to the output dir', required=True)
+    parser.add_argument('--version', type=str, help='Version nr of the model/data')
     
     args = parser.parse_args()
-    version = args.ver
     subset = args.subset
-    logs_dir = args.logs_dir
+    model_dir = args.model_dir
+    output_dir = args.output_dir
+    ver = args.version
         
-    
+    # prepare output dir
+    if ver is not None:
+        output_path = f"{output_dir}/latent_{ver}.h5"
+    else:
+        output_path = f"{output_dir}/latent.h5"
+
+    # check exist create output_dir
+    os.makedirs(output_dir, exist_ok=True)
+
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 
-    version_dir = f"{logs_dir}/version_{version}/checkpoints" 
-    config_filepath = f"{logs_dir}/version_{version}/vae_params.yaml"
+    version_dir = f"{model_dir}/checkpoints" 
+    config_filepath = f"{model_dir}/vae_params.yaml"
 
     # config stuff
     with open(config_filepath, 'r') as config_file:
@@ -65,12 +75,7 @@ if __name__ == "__main__":
     CKPT_PATH = rf"{version_dir}/{ckpt_files[-1]}"
     print(f"Loading model from {CKPT_PATH}")
     
-    # prepare output dir
-    output_dir = f"{logs_dir}/version_{version}"
-    output_path = f"{output_dir}/latent_{version}.h5"
-
-    # check exist create output_dir
-    os.makedirs(output_dir, exist_ok=True)
+    
 
     # load model checkpoint
     checkpoint = torch.load(CKPT_PATH)

@@ -1,22 +1,20 @@
 
 import argparse
 from ldm.denoising_diffusion_pytorch3D import Unet3D, GaussianDiffusion3D, Trainer3D
+import os 
 
 if __name__ == "__main__":
     # args
     parser = argparse.ArgumentParser(description='Train LDM')
-    parser.add_argument('--ver', type=str, required=True, help='Version nr of the model')
     parser.add_argument('--input', type=str, help='Path to H5 file input', required=True)
-    parser.add_argument('--output-dir', type=str, help='Path to output dir', required=True)
+    parser.add_argument('--model-dir', type=str, help='Path to model dir will be created', required=True)
     parser.add_argument('--batch-size', type=int, help='Batch size', default=64)
     args = parser.parse_args()
 
-    ver = args.ver
     h5_filepath = args.input
-    output_dir = args.output_dir
+    model_dir = args.model_dir
     batch_size = args.batch_size
 
-    output_dir = f"{output_dir}/diff3_model_{ver}"
     
     im_size = (20,20,16)
     channel = 4
@@ -37,6 +35,9 @@ if __name__ == "__main__":
         loss_type = 'l1'            # L1 or L2
     ).cuda()
 
+    # create model dir
+    os.makedirs(model_dir, exist_ok=True)
+
     trainer = Trainer3D(
         diffusion,
         h5_filepath = h5_filepath,
@@ -48,7 +49,7 @@ if __name__ == "__main__":
         gradient_accumulate_every = 2,    # gradient accumulation steps
         ema_decay = 0.995,                # exponential moving average decay
         # amp = True                        # turn on mixed precision
-        results_folder = output_dir,
+        results_folder = model_dir,
         num_samples=25,
         save_and_sample_every = 1000,
     )
