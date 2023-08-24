@@ -755,7 +755,7 @@ class Trainer3D(object):
         diffusion_model,
         h5_filepath,
         *,
-        dynamic_sampling = False,
+        dynamic_sampling = True,
         train_batch_size = 16,
         gradient_accumulate_every = 1,
         train_lr = 1e-4,
@@ -793,15 +793,15 @@ class Trainer3D(object):
         self.image_dimension = self.image_size
         print(self.image_dimension)
 
-        # dataset and dataloader
-        self.ds = DatasetH5(h5_filepath, self.image_dimension, dynamic_sampling)
-        dl = DataLoader(self.ds, batch_size = train_batch_size, shuffle = True, pin_memory = True, num_workers = cpu_count())
+        if h5_filepath is not None:
+            # dataset and dataloader
+            self.ds = DatasetH5(h5_filepath, self.image_dimension, dynamic_sampling)
+            dl = DataLoader(self.ds, batch_size = train_batch_size, shuffle = True, pin_memory = True, num_workers = cpu_count())
 
-        dl = self.accelerator.prepare(dl)
-        self.dl = cycle(dl)
+            dl = self.accelerator.prepare(dl)
+            self.dl = cycle(dl)
 
         # optimizer
-
         self.opt = Adam(diffusion_model.parameters(), lr = train_lr, betas = adam_betas)
 
         # for logging results in a folder periodically

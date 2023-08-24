@@ -53,16 +53,19 @@ Prepare the data by exporting the latent space of the training data using the VA
 H5 file contains minimum and maximum values of the latent space, which will be used to normalize the latent space during training. Mean and std of the latent space is saved in separate columns to be used for the sampling process during LDM training.
   
 #### Train LDM
-Copy the latent space training set to another directory if you wish, this will be used as the INPUT data. Fill in VER number to keep track of the expriment.
+Copy the latent space training set to another qdirectory if you wish, this will be used as the INPUT data. Fill in VER number to keep track of the expriment.
 
 By default DIFF-3 will be trained for 50000 iterations
         
-    >> python trainer_ldm_3d.py --ver VER --input INPUT --output-dir OUTPUT_DIR [--batch-size BATCH_SIZE]
+    >> python ldm/trainer_ldm_3d.py --ver VER --input INPUT --output-dir OUTPUT_DIR [--batch-size BATCH_SIZE]
 
 
 ### 3. Inference
+Inference consists of two steps: sampling and reconstruction.
 
-        ...
+Generate latent samples from the trained LDM model. The latent samples will be saved in H5 file format.
+
+    >> python ldm/generate_samples.py --model-dir MODEL_DIR --ver VER --model-id MODEL_ID [--n-data N_DATA]
 
 
 
@@ -75,7 +78,7 @@ DIFF-3 is an unconditioned Latent Diffusion Model (LDM) consisting of two stages
 1. Variational Auto Encoder (VAE)
 2. Denoising Diffusion Probabilistic Model (DDPM)
 
-The code is modified based on the original implementation from [Latent Diffusion Models](https://github.com/CompVis/latent-diffusion) github, and adjusted to allow for 3D images+labels.
+The code is modified based on the original implementation from [Latent Diffusion Models](https://github.com/CompVis/latent-diffusion) and [DDPM](https://github.com/lucidrains/denoising-diffusion-pytorch) github, and adjusted to allow for 3D images+labels.
 
 The image below shows the overview of the VAE network.
 <p align="center">
