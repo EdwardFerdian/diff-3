@@ -68,13 +68,16 @@ if __name__ == "__main__":
 
     model_dir = args.model_dir
     input_file = args.input
-    iter = args.iter
+    model_id = args.iter
     nr_data = args.n_data
     output_dir = args.output_dir
 
     config_filepath = f"{model_dir}/vae_params.yaml"
-    output_file = f"{output_dir}/_synthetic.h5"
-    colname = f"iter-{iter}/result"
+
+    # get the filename from the input path
+    filename = os.path.basename(input_file)
+    output_file = f"{output_dir}/_synthetic{filename}"
+    colname = f"iter-{model_id}/result"
     output_colname = colname
 
     img_size = (160, 160, 128)

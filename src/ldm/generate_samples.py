@@ -20,17 +20,21 @@ if __name__ == "__main__":
     # args
     parser = argparse.ArgumentParser(description='Generate latent samples')
     parser.add_argument('--model-dir', type=str, required=True, help='Path to the models dir')
-    parser.add_argument('--ver', type=str, required=True, help='Version nr of the model to test')
     parser.add_argument('--model-id', type=str, required=True, help='Model id of the model to test')
+    parser.add_argument('--output-dir', type=str, required=True, help='Path to the output dir')
+    parser.add_argument('--version', type=str, help='Version nr of samples')
     parser.add_argument('--n-data', type=int, default=4, help='Number of data to generate')
     args = parser.parse_args()
 
-    ver = args.ver
+    ver = args.version
     model_id = args.model_id
     num_samples = args.n_data
     ldm_network_dir = args.model_dir
 
-    output_filename = f"_samples{ver}.h5"
+    if ver is not None:
+        output_filename = f"_samples{ver}.h5"
+    else:
+        output_filename = f"_samples.h5"
     
     im_size = (20,20,16)
     channel = 4
