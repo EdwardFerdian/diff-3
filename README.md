@@ -55,8 +55,7 @@ After the training, edit the `vae_200.yaml` and change the ckpt_path to the late
 #### Prepare training data
 Prepare the data by exporting the latent space of the training data using the VAE model that was just trained. Output will be saved in H5 file format.
   
-    >> python autoencoder/export_latent.py --ver VER [--subset SUBSET] --model-dir MODEL_DIR --output-dir OUTPUT_DIR  [--version VERSION]
-
+    >> python autoencoder/export_latent.py  [--subset SUBSET] --model-dir MODEL_DIR --output-dir OUTPUT_DIR [--version VERSION]
 
 H5 file contains minimum and maximum values of the latent space, which will be used to normalize the latent space during training. Mean and std of the latent space is saved in separate columns to be used for the sampling process during LDM training.
   
