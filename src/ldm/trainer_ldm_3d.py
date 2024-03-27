@@ -50,7 +50,7 @@ if __name__ == "__main__":
         ema_decay = 0.995,                # exponential moving average decay
         # amp = True                        # turn on mixed precision
         results_folder = model_dir,
-        num_samples=25,
+        num_samples=16,
         save_and_sample_every = 1000,
     )
 

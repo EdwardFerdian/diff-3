@@ -69,9 +69,11 @@ if __name__ == "__main__":
     with torch.no_grad():
         total_sample = 0
         batches = num_to_groups(trainer.num_samples, trainer.batch_size)
+        h5util.save(f"{trainer.results_folder}/{output_filename}", f"model_id", [model_id], compression="gzip", dtype="uint8")
         for batch in batches:
             images = trainer.ema.ema_model.sample(batch_size=batch)
-            h5util.save(f"{trainer.results_folder}/{output_filename}", f"iter-{model_id}/result", images.cpu().numpy(), compression="gzip")
+            h5util.save(f"{trainer.results_folder}/{output_filename}", f"samples", images.cpu().numpy(), compression="gzip")
+
 
             total_sample += batch
             print(f"Generated {total_sample}/ {num_samples}")

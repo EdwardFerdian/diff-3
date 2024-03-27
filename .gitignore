@@ -131,3 +131,5 @@ dmypy.json
 src/taming-transformers/
 src/autoencoder/lightning_logs/
 src/autoencoder/taming/modules/autoencoder/lpips/vgg.pth
+
+*.h5

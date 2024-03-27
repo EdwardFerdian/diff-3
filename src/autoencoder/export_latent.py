@@ -97,8 +97,8 @@ if __name__ == "__main__":
             std = posterior.std.cpu().numpy()
             
             # for each of the mu-std pair, calculate the lower/upper bound and get the min/max
-            lower_bound = np.min(mu - 4 * std, axis=(1,2,3,4))
-            upper_bound = np.max(mu + 4 * std, axis=(1,2,3,4))
+            lower_bound = np.min(mu - 3 * std, axis=(1,2,3,4))
+            upper_bound = np.max(mu + 3 * std, axis=(1,2,3,4))
 
             h5util.save(output_path, f"{subset}/mean", mu)
             h5util.save(output_path, f"{subset}/std", std)

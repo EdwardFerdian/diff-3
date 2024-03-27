@@ -28,11 +28,11 @@ def stack_to_grid(echo_imgs, row, is_img=True):
     grid = make_grid(echo_imgs, padding=0, nrow=row)
     grid = grid.cpu().numpy()
     if is_img:
-        grid = grid * 255
         np.clip(grid, 0, 255, out=grid)
     else:
+        # just for visualization
         grid = grid / np.max(grid) * 255 
-        # print(f"{grid.shape = }")
+        
     grid = np.transpose(grid, (1,2,0)).astype(np.uint8)
     grid = grid[:,:,0].squeeze()
     return grid
@@ -61,14 +61,12 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Generate synthetic images')
     parser.add_argument('--model-dir', type=str, required=True, help='Path to the models dir')
     parser.add_argument('--input', type=str, required=True, help='Path to the H5 samples file')
-    parser.add_argument('--iter', type=str, required=True, help='Model id of the model to test')
     parser.add_argument('--n-data', type=int, default=0, help='Number of data to generate')
     parser.add_argument('--output-dir', type=str, required=True, help='Path to the output dir')
     args = parser.parse_args()
 
     model_dir = args.model_dir
     input_file = args.input
-    model_id = args.iter
     nr_data = args.n_data
     output_dir = args.output_dir
 
@@ -77,8 +75,9 @@ if __name__ == "__main__":
     # get the filename from the input path
     filename = os.path.basename(input_file)
     output_file = f"{output_dir}/_synthetic{filename}"
-    colname = f"iter-{model_id}/result"
-    output_colname = colname
+    colname = f"samples"
+    output_imgcol = f"images"
+    output_labelcol = f"labels"
 
     img_size = (160, 160, 128)
     
@@ -99,6 +98,7 @@ if __name__ == "__main__":
     with h5py.File(input_file, 'r') as hl:
         im_min = hl.get("min")[0]
         im_max = hl.get("max")[0]
+        model_id = hl.get("model_id")[0]
         len_data = len(hl.get(colname))
     
     if nr_data == 0:
@@ -139,20 +139,32 @@ if __name__ == "__main__":
             recon = np.transpose(recon, (0,2,3,4,1))
             
             recon_img = sanitize_img(recon[...,0])
+            recon_img = recon_img * 255
+
             recon_label = np.argmax(recon[...,1:], axis=-1)
+
+            # convert to uint8
+            recon_img = recon_img.astype(np.uint8)
+            recon_label = recon_label.astype(np.uint8)
+        
             recon = np.stack([recon_img, recon_label], axis=-1)
 
+            h5util.save(output_file, output_imgcol, recon_img, compression="gzip", dtype="uint8")
+            h5util.save(output_file, output_labelcol, recon_label, compression="gzip", dtype="uint8")
+
+            # For visualization purposes
             echo_img  = recon[:,img_size[0]//2,..., :1]
             label_img = recon[:,img_size[0]//2,..., 1:]
 
+            
+
+            echo_imgs = update_list(echo_imgs, echo_img)
+            label_imgs = update_list(label_imgs, label_img)
+            
             message +=(f" {(time.time()-start_time):.2f} sec")
             print(f"\r{message}", end='')
 
-            # For visualization purposes
-            echo_imgs = update_list(echo_imgs, echo_img)
-            label_imgs = update_list(label_imgs, label_img)
-
-            h5util.save(output_file, output_colname, recon, compression="gzip")
+            
         # end of for loop
         print(f"\n{len_data} images generated! Total time: {(time.time()-start_time0):.2f} sec")
     # end of torch no grad
