@@ -5,10 +5,7 @@ def load_img(filepath, col_name, idx):
     with h5py.File(filepath, 'r') as hl:
         img = hl.get(col_name)[idx]
         img = np.expand_dims(img, 0)
-        # print(f"{img.shape = } {np.min(img) = } {np.max(img) = }")
-        # print(f"{np.mean(img) = } {np.std(img) = }")
-
-        # img = img * (im_max - im_min) + im_min
+        
     return img
 
 def save_str(output_filepath, col_name, str_val, compression=None):
@@ -25,7 +22,10 @@ def save_str(output_filepath, col_name, str_val, compression=None):
             ds.resize((ds.shape[0]) + len(str_val), axis = 0)
             ds[-len(str_val):] = str_val
 
-def save(output_filepath, col_name, dataset, compression=None):
+def save(output_filepath, col_name, dataset, compression=None, dtype=None):
+    if dtype is not None:
+        dataset = np.array(dataset, dtype=dtype)
+
     # convert float64 to float32 to save space
     if dataset.dtype == 'float64':
         dataset = np.array(dataset, dtype='float32')

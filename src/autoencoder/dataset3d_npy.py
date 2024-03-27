@@ -25,6 +25,9 @@ class Dataset3D_NPY(Dataset):
         img = np.load(f"{self.img_dir}/{self.filenames[index]}")
         label = np.load(f"{self.label_dir}/{self.filenames[index]}")
 
+        # normalize
+        img = img / 255.0
+
         img = np.stack((img, label), axis=0)
         item = torch.from_numpy(img).type(torch.FloatTensor)
         

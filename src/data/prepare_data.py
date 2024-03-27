@@ -78,10 +78,9 @@ class Preprocessor():
         img = self._resize(img, r, pads, 3)
         mask = self._resize(mask, r, pads, 0)
 
-        # normalize
-        img = img / 255.
-
-        # print(self.filenames[index])
+        # as uint8
+        img = img.astype(np.uint8)
+        mask = mask.astype(np.uint8)
 
         if self.format == "h5":
             output_filepath = f"{self.output_dir}/mitea.h5"
@@ -89,8 +88,8 @@ class Preprocessor():
             img = np.expand_dims(img, axis=0)
             mask = np.expand_dims(mask, axis=0)
 
-            h5util.save(output_filepath, f"{self.data_subset}/images", img)
-            h5util.save(output_filepath, f"{self.data_subset}/labels", mask)
+            h5util.save(output_filepath, f"{self.data_subset}/images", img, dtype="uint8")
+            h5util.save(output_filepath, f"{self.data_subset}/labels", mask, dtype="uint8")
             h5util.save_str(output_filepath, f"{self.data_subset}/filenames", self.filenames[index])
         else:
             img_dir = f"{self.output_dir}/{self.data_subset}/images"
