@@ -1,6 +1,5 @@
 from tqdm import tqdm
 import os
-from multiprocessing import cpu_count
 import torch
 import yaml
 from autoencoder import AutoencoderKL
@@ -85,7 +84,7 @@ if __name__ == "__main__":
     network.load_state_dict(checkpoint['state_dict'], strict=False)
     network.eval()
 
-    dl = DataLoader(ds, batch_size=1,shuffle=False, pin_memory = True, num_workers = cpu_count())
+    dl = DataLoader(ds, batch_size=1,shuffle=False, pin_memory = True, num_workers = 4)
     
     with torch.no_grad():
         for data in tqdm(dl):

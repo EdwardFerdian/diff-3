@@ -8,7 +8,6 @@ from pathlib import Path
 from random import random
 from functools import partial
 from collections import namedtuple
-from multiprocessing import cpu_count
 
 import torch
 from torch import nn, einsum
@@ -796,7 +795,7 @@ class Trainer3D(object):
         if h5_filepath is not None:
             # dataset and dataloader
             self.ds = DatasetH5(h5_filepath, self.image_dimension, dynamic_sampling)
-            dl = DataLoader(self.ds, batch_size = train_batch_size, shuffle = True, pin_memory = True, num_workers = cpu_count())
+            dl = DataLoader(self.ds, batch_size = train_batch_size, shuffle = True, pin_memory = True, num_workers = 4)
 
             dl = self.accelerator.prepare(dl)
             self.dl = cycle(dl)

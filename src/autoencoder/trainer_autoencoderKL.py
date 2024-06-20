@@ -63,7 +63,7 @@ if __name__ == "__main__":
     # Init ModelCheckpoint callback, monitoring 'val_loss'
     checkpoint_callback = ModelCheckpoint(
         monitor="val/rec_loss",
-        save_top_k=2, 
+        save_top_k=1, 
         filename="{epoch:04}"
     )
 
