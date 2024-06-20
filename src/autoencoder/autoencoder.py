@@ -6,6 +6,7 @@ from pathlib import Path
 from torch.utils.data import DataLoader
 import importlib
 from multiprocessing import cpu_count
+import matplotlib.pyplot as plt
 
 import util.h5_util as h5util
 import torch
@@ -16,7 +17,14 @@ from PIL import Image
 import torch.nn.functional as F
 import pytorch_lightning as pl
 
-
+def sanitize_img(x):
+    """
+    Convert the given image to a numpy array
+    """
+    if np.min(x) < 0:
+        x += np.min(x)
+    np.clip(x, 0, 1, out=x)
+    return x
 
 class DiagonalGaussianDistribution(object):
     def __init__(self, parameters, deterministic=False):
@@ -573,15 +581,39 @@ class AutoencoderKL(pl.LightningModule):
             save_dir.mkdir(exist_ok=True)
 
             # get the first item
-            outimg = np.transpose(reconstructions[0].cpu().numpy(), [1,2,3,0])
-            h5util.save(f"{save_dir}/recon_epoch.h5", "recon", np.expand_dims(outimg, axis=0))
+            output = np.transpose(reconstructions[0].cpu().numpy(), [1,2,3,0])
+            # h5util.save(f"{save_dir}/recon_epoch.h5", "recon", np.expand_dims(outimg, axis=0))
+
+
+            outimg = sanitize_img(output[..., 0])
+            outlabel = np.argmax(output[..., 1:], axis=-1)
 
             outimg = np.squeeze(outimg * 255)
-            np.clip(outimg, 0, 255, out=outimg)
             outimg = outimg.astype(np.uint8)
 
-            im = Image.fromarray(outimg[80])
-            im.save(f"{save_dir}/echo-{self.current_epoch}.png")
+            outlabel = np.squeeze(outlabel)
+            outlabel = outlabel.astype(np.uint8)
+            h5util.save(f"{save_dir}/recon_epoch.h5", "recon_img", np.expand_dims(outimg, axis=0))
+            h5util.save(f"{save_dir}/recon_epoch.h5", "recon_label", np.expand_dims(outlabel, axis=0))
+
+            # im = Image.fromarray(outimg[80, ..., 0])
+            # im.save(f"{save_dir}/echo-{self.current_epoch}.png")
+
+            # im = Image.fromarray(outimg[80, ..., 1:])
+            # im.save(f"{save_dir}/echo-{self.current_epoch}-label.png")
+
+            plt.subplot(121)
+            plt.imshow(outimg[80], cmap='viridis')
+            plt.colorbar()
+            plt.axis('off')
+
+            plt.subplot(122)
+            plt.imshow(outlabel[80], cmap='viridis')
+            plt.colorbar()
+            plt.axis('off')
+            
+            plt.savefig(f"{save_dir}/echo-{self.current_epoch}.png")
+            plt.close()
 
             # return reconstructions, posterior
 

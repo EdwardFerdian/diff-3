@@ -25,7 +25,11 @@ class Dataset3D_NPY(Dataset):
         img = np.load(f"{self.img_dir}/{self.filenames[index]}")
         label = np.load(f"{self.label_dir}/{self.filenames[index]}")
 
-        # normalize
+        # change to float
+        img = img.astype(np.float32)
+        label = label.astype(np.float32)
+
+        # # normalize
         img = img / 255.0
 
         img = np.stack((img, label), axis=0)
