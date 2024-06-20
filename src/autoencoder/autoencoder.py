@@ -482,6 +482,16 @@ class AutoencoderKL(pl.LightningModule):
             self.init_from_ckpt(ckpt_path, ignore_keys=ignore_keys)
 
     def init_from_ckpt(self, path, ignore_keys=list()):
+        import os
+        # if path is dir
+        if Path(path).is_dir():
+            version_dir = f"{path}/checkpoints" 
+            ckpt_files = os.listdir(version_dir)
+            ckpt_files = [f for f in ckpt_files if f.startswith("epoch=0")]
+            # sort and take last one
+            ckpt_files.sort()
+            path = rf"{version_dir}/{ckpt_files[-1]}"
+        
         sd = torch.load(path, map_location="cpu")["state_dict"]
         keys = list(sd.keys())
         for k in keys:
@@ -518,10 +528,10 @@ class AutoencoderKL(pl.LightningModule):
         return dec, posterior
 
     def train_dataloader(self):
-        return DataLoader(self.train_ds, batch_size = self.batch_size, shuffle = True, pin_memory = True, num_workers = cpu_count())
+        return DataLoader(self.train_ds, batch_size = self.batch_size, shuffle = True, pin_memory = True, num_workers = 4)
         
     def val_dataloader(self):
-        return DataLoader(self.val_ds, batch_size=self.batch_size,shuffle=False, pin_memory = True, num_workers = cpu_count())
+        return DataLoader(self.val_ds, batch_size=self.batch_size,shuffle=False, pin_memory = True, num_workers = 4)
 
     def training_step(self, batch, batch_idx, optimizer_idx=0):
         # inputs = self.get_input(batch, self.image_key)
@@ -534,7 +544,8 @@ class AutoencoderKL(pl.LightningModule):
                                             last_layer=self.get_last_layer(), split="train")
 
             self.log("aeloss", aeloss, prog_bar=True, logger=True, on_step=True, on_epoch=True)
-            self.log("w_recon_loss", log_dict_ae["train/w_nll_loss"], prog_bar=True, logger=True, on_step=True, on_epoch=False)
+            # self.log("logvar", log_dict_ae["train/logvar"], prog_bar=True, logger=True, on_step=True, on_epoch=False)
+            # self.log("w_recon_loss", log_dict_ae["train/w_nll_loss"], prog_bar=True, logger=True, on_step=True, on_epoch=False)
             
             self.log("l1_loss", log_dict_ae["train/l1_loss"], prog_bar=True, logger=True, on_step=True, on_epoch=False)
             self.log("xent_loss", log_dict_ae["train/xent_loss"], prog_bar=True, logger=True, on_step=True, on_epoch=False)

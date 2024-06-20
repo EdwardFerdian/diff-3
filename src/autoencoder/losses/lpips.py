@@ -259,8 +259,9 @@ class LPIPSWithDiscriminator(nn.Module):
             rec_img = reconstructions[:, 0, ...].contiguous()
             # collapse reconstructions channel 1 to 3 to 1 channel
             rec_label = torch.argmax(reconstructions[:, 1:, ...].contiguous(), dim=1)
+            nr_labels = reconstructions.shape[1] - 2 # not including first channel & bg
             # label need to be normalized
-            rec_label = rec_label.float() / 2.0
+            rec_label = rec_label.float() / nr_labels
             # stack them together
             rec_pair = torch.stack([rec_img, rec_label], dim=1)
 
@@ -270,7 +271,7 @@ class LPIPSWithDiscriminator(nn.Module):
             # get second channel of input as label
             input_label = inputs[:, 1, ...].contiguous()
             # normalize
-            input_label = input_label.float() / 2.0
+            input_label = input_label.float() / nr_labels
             # stack them together
             input_pair = torch.stack([input_img, input_label], dim=1)
 
@@ -307,7 +308,7 @@ class LPIPSWithDiscriminator(nn.Module):
             loss = weighted_nll_loss + weighted_kl_loss
 
             log = {"{}/total_loss".format(split): loss.clone().detach().mean(), 
-                    "{}/logvar".format(split): self.logvar.detach(),
+                    "{}/logvar".format(split): self.logvar.detach().mean(),
                     "{}/kl_loss".format(split): kl_loss.detach().mean(), 
                     "{}/nll_loss".format(split): nll_loss.detach().mean(),
                     "{}/rec_loss".format(split): rec_loss.detach().mean(),
