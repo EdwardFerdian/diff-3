@@ -13,7 +13,7 @@ hyperparams:
   embed_dim: 4
 
 model_restore:
-  ckpt_path: ./lightning_logs/version_0/checkpoints/epoch=00xx.ckpt
+  ckpt_path: ./lightning_logs/version_122
 
 ddconfig:
   double_z: true
